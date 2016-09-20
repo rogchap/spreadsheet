@@ -1,0 +1,11 @@
+{
+  "name": "spreadsheet",
+  "version": "1.0.0",
+  "description": "Given a csv with postfix values, output csv with computed values",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Roger Chapman",
+  "license": "ISC"
+}
