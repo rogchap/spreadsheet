@@ -1,9 +1,10 @@
 import chai from 'chai';
 chai.should();
 
-describe('Dummy', () => {
+describe('Spreadsheet', () => {
+
   it('is not real', () => {
-      false.should.not.be.ok;
-    });
+    false.should.not.be.ok;
+  });
 
 })
