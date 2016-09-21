@@ -41,7 +41,7 @@ export default class Spreadsheet {
     });
   }
 
-  compute() {
+  _compute() {
 
     // Go through each cell and compute it's value
     // If the value has already been calculated (because of recursion) skip it.
@@ -53,5 +53,21 @@ export default class Spreadsheet {
         cell.compute(this._dataMap);
       }
     });
+  }
+
+  computeData() {
+    this._compute();
+
+    const computedData = [];
+    let prevRow = -1;
+    Object.keys(this._dataMap).forEach(key => {
+      const cell = this._dataMap[key];
+      if (cell.row > prevRow) {
+        computedData.push([]);
+      }
+      computedData[cell.row].push(cell.value);
+      prevRow = cell.row;
+    })
+    return computedData;
   }
 }

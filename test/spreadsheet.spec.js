@@ -59,14 +59,14 @@ describe('Spreadsheet', () => {
     });
 
     it('should have cell values after compute', () => {
-      spreadsheet.compute();
+      spreadsheet._compute();
       expect(spreadsheet._dataMap['A1'].value).to.exist;
       expect(spreadsheet._dataMap['B1'].value).to.exist;
       expect(spreadsheet._dataMap['C1'].value).to.exist;
     });
 
     it('should have correct cell values after compute', () => {
-      spreadsheet.compute();
+      spreadsheet._compute();
       expect(spreadsheet._dataMap['A1'].value, 'A1').to.equal(-8);
       expect(spreadsheet._dataMap['B1'].value, 'B1').to.equal(-13);
       expect(spreadsheet._dataMap['C1'].value, 'C1').to.equal(3);
