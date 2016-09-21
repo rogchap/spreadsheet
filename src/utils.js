@@ -6,6 +6,7 @@
  *
  * @export
  * @param {number} val
+ * @returns {string}
  */
 export function numberToLetter(val: number) {
   let numberToConvert = val;
@@ -19,4 +20,22 @@ export function numberToLetter(val: number) {
     numberToConvert = Math.floor(numberToConvert / length) - 1;
   }
   return letter;
+}
+
+/**
+ * Return true if a valid basic arithmetic operator: +, -, *, /
+ *
+ * @export
+ * @param {string} str
+ * @returns {boolean}
+ */
+export function isOperator(str: string) {
+  return str === '+' || str === '-' || str === '*' || str === '/';
+}
+
+export const operatorMap = {
+  '+': (o1: number, o2: number) => o1 + o2,
+  '-': (o1: number, o2: number) => o1 - o2,
+  '*': (o1: number, o2: number) => o1 * o2,
+  '/': (o1: number, o2: number) => o1 / o2,
 }

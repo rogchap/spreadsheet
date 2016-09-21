@@ -1,5 +1,5 @@
 /* @flow */
-import { numberToLetter } from './utils';
+import { numberToLetter, isOperator, operatorMap } from './utils';
 
 /**
  * Cell Reperesents one spreadsheet cell
@@ -44,10 +44,10 @@ export default class Cell {
   /**
    * The computed value of the Cell
    *
-   * @type {number}
+   * @type {(number|string)}
    * @memberOf Cell
    */
-  value: number;
+  value: number|string;
 
   /**
    * Creates an instance of Cell.
@@ -68,5 +68,65 @@ export default class Cell {
   _setId() {
     const colName = numberToLetter(this.col);
     this.id = colName + (this.row + 1);
+  }
+
+  /**
+   * Given all cell data compute the value of this Cell
+   *
+   * @param {{[key: string]: Cell}} data
+   *
+   * @memberOf Cell
+   */
+  compute(data: {[key: string]: Cell}) {
+
+    // get each part of our postfix notation
+    const parts = this.content.split(/\s/)
+    const stack = [];
+    const PostfixException = {};
+
+    try {
+      // go through each part and add to stack, ignoring any blank parts
+      // https://en.wikipedia.org/wiki/Reverse_Polish_notation#Postfix_algorithm
+      parts.forEach(part => {
+
+        // First test for a operand
+        if (/^(\d*(\.\d*)?)$/.test(part)) {
+
+          // easy, just add to the stack as a number.
+          stack.push(parseFloat(part));
+
+        // Next test for an operator
+        } else if (isOperator(part)) {
+
+          // pull out the last 2 operands
+          const op2 = stack.pop();
+          const op1 = stack.pop();
+
+          // we must have two operands otherwise postfix is invalid
+          if(!op1 || !op2) {
+            throw PostfixException;
+          }
+          stack.push(operatorMap[part](op1, op2));
+
+        // Last test will be for a reference to another cell,
+        // everything else (blank spaces) will be ignored.
+        } else if (/^[A-Z]+\d+$/.test(part)) {
+
+          // Now recursively get this cell's value, but if it's already computed use that.
+          if (!data[part].value) {
+            data[part].compute(data);
+          }
+          const cellRefVal = data[part].value;
+          if (!cellRefVal || cellRefVal === '#ERR') {
+            throw PostfixException;
+          }
+          stack.push(cellRefVal);
+        }
+      });
+      // stack should be of length 1, if not something went wrong!
+      this.value = stack.length === 1 ? stack[0] : '#ERR';
+    } catch (error) {
+      this.value = '#ERR';
+    }
   }
 }
