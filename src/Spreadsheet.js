@@ -55,11 +55,20 @@ export default class Spreadsheet {
     });
   }
 
+  /**
+   * Computes the values of each cell and returns the data as 2d matrix
+   *
+   * @returns
+   *
+   * @memberOf Spreadsheet
+   */
   computeData() {
     this._compute();
 
     const computedData = [];
     let prevRow = -1;
+
+    // Keys should be in order
     Object.keys(this._dataMap).forEach(key => {
       const cell = this._dataMap[key];
       if (cell.row > prevRow) {
