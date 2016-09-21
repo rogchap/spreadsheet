@@ -2,9 +2,12 @@
   "name": "spreadsheet",
   "version": "1.0.0",
   "description": "Given a csv with postfix values, output csv with computed values",
-  "main": "index.js",
+  "bin": {
+    "spreadsheet": "src/index.js"
+  },
   "scripts": {
-    "test": "mocha --compilers js:babel-register"
+    "test": "mocha --compilers js:babel-register",
+    "start": "babel-node src"
   },
   "author": "Roger Chapman",
   "license": "ISC",
