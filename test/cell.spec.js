@@ -36,16 +36,11 @@ describe('Cell', () => {
     });
   });
 
-  describe.only('#compute', () => {
+  describe('#compute', () => {
 
     it('should set the value', () => {
       cell.compute({});
       expect(cell.value).to.exist;
-    });
-
-    it('should set value to "#ERR", when given non-postfix content', () => {
-      cell.compute({});
-      expect(cell.value).to.equal('#ERR');
     });
 
     it('should calculate the correct value', () => {
@@ -61,6 +56,12 @@ describe('Cell', () => {
         B2: new Cell(0,0, '5'),
       });
       expect(cell.value).to.equal(7);
+    });
+
+    it('should calculate value as zero if cell is empty', () => {
+      cell = new Cell(0, 0, '   ');
+      cell.compute({});
+      expect(cell.value).to.equal(0);
     });
   });
 

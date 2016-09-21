@@ -43,5 +43,15 @@ export default class Spreadsheet {
 
   compute() {
 
+    // Go through each cell and compute it's value
+    // If the value has already been calculated (because of recursion) skip it.
+
+    // If we used a Map, we could have done a for...of
+    Object.keys(this._dataMap).forEach(key => {
+      const cell = this._dataMap[key];
+      if (!cell.value) {
+        cell.compute(this._dataMap);
+      }
+    });
   }
 }

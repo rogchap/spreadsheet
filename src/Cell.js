@@ -78,7 +78,6 @@ export default class Cell {
    * @memberOf Cell
    */
   compute(data: {[key: string]: Cell}) {
-
     // get each part of our postfix notation
     const parts = this.content.split(/\s/)
     const stack = [];
@@ -90,7 +89,7 @@ export default class Cell {
       parts.forEach(part => {
 
         // First test for a operand
-        if (/^(\d*(\.\d*)?)$/.test(part)) {
+        if (/^(\d+(\.\d*)?)$/.test(part)) {
 
           // easy, just add to the stack as a number.
           stack.push(parseFloat(part));
@@ -102,8 +101,8 @@ export default class Cell {
           const op2 = stack.pop();
           const op1 = stack.pop();
 
-          // we must have two operands otherwise postfix is invalid
-          if(!op1 || !op2) {
+          // we must have two operands otherwise postfix is invalid, treat zero as truthy
+          if((!op1 && op1 !== 0) || (!op2 && op2 !== 0)) {
             throw PostfixException;
           }
           stack.push(operatorMap[part](op1, op2));
@@ -117,14 +116,15 @@ export default class Cell {
             data[part].compute(data);
           }
           const cellRefVal = data[part].value;
-          if (!cellRefVal || cellRefVal === '#ERR') {
+          if ((!cellRefVal && cellRefVal !== 0) || cellRefVal === '#ERR') {
             throw PostfixException;
           }
           stack.push(cellRefVal);
         }
       });
-      // stack should be of length 1, if not something went wrong!
-      this.value = stack.length === 1 ? stack[0] : '#ERR';
+
+      // stack should be of length 1, if not something went wrong! If stack is empty treat as zero
+      this.value = stack.length <= 1 ? stack[0] || 0 : '#ERR';
     } catch (error) {
       this.value = '#ERR';
     }
