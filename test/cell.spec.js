@@ -17,7 +17,8 @@ describe('Cell', () => {
     });
 
     it('returns the correct ID for the row/col', () => {
-      expect(cell.id).to.equal('E1');
+      // Cell col and row is zero based
+      expect(cell.id).to.equal('F2');
     });
   })
 
